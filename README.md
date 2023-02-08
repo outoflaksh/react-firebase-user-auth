@@ -6,7 +6,7 @@ Make sure to install Node.js first.
 
 1. Clone the repo
    ```sh
-   git clone 
+   git clone git@github.com:outoflaksh/react-firebase-user-auth.git
    ```
 2. Install NPM packages
    ```sh
