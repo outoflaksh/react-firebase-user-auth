@@ -19,7 +19,12 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { googleProvider } from "../firebase-config";
 
 function Copyright(props) {
   return (
@@ -47,11 +52,31 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
+  const signInWithGoogle = (event) => {
+    event.preventDefault();
+    const authentication = getAuth();
+
+    try {
+      signInWithPopup(authentication, googleProvider).then((response) => {
+        console.log(response);
+        navigate("/home");
+        sessionStorage.setItem(
+          "Auth Token",
+          response._tokenResponse.refreshToken
+        );
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const authentication = getAuth();
     signInWithEmailAndPassword(authentication, email, password)
       .then((response) => {
+        console.log(response);
         navigate("/home");
         sessionStorage.setItem(
           "Auth Token",
@@ -130,6 +155,15 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
+            </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mb: 2 }}
+              onClick={signInWithGoogle}
+            >
+              Sign In With Google
             </Button>
             <Grid container>
               <Grid item xs>
